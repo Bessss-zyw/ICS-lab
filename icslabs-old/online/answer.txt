@@ -1,0 +1,4 @@
+I turned the moon into something I like to call a Death Star.
+-3 0 2 3 3 2
+2 g 77
+0

@@ -1,0 +1,51 @@
+# Yiwen Zhang 518021911211
+
+        .pos 0
+        irmovq  stack, %rsp     #set up stack pointer
+        irmovq  ele1, %rdi
+        call    rsum_list        #execute function
+        halt                    #terminate
+
+# Sample linked list
+        .align 8
+ele1:
+        .quad 0x00a
+        .quad ele2
+ele2:
+        .quad 0x0b0
+        .quad ele3
+ele3:
+        .quad 0xc00
+        .quad 0
+
+rsum_list:
+    pushq       %rbp
+    rrmovq      %rsp, %rbp
+    irmovq      $8, %rcx
+    subq        %rcx, %rsp
+    rmmovq      %rdi, -8(%rbp)  #ls
+L1:
+    irmovq      $0, %rcx
+    subq        %rcx, %rdi
+    je          L3      # if ls = null
+L2:
+    mrmovq      (%rdi), %rcx
+    mrmovq      8(%rdi), %rdi
+    pushq       %rcx
+    pushq       %rdi
+    call        rsum_list
+    popq        %rdi
+    popq        %rcx
+    addq        %rcx, %rax
+    jmp         L4
+L3:
+    irmovq      $0, %rax
+L4:
+    irmovq      $8, %rcx
+    addq        %rcx, %rsp
+    popq        %rbp
+    ret
+
+# stack starts here and grows to lower addresses
+        .pos 0x300
+stack:

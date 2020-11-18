@@ -1,0 +1,723 @@
+### maxK = 8
+
+##################################################################
+# You can modify this portion
+	# Loop header
+	# K = 8
+	iaddq $-8,%rdx		# len >= 8?
+	irmovq $0,%rax		# count = 0;
+	jl Loop1header		# if so, goto Loop1header:
+
+Loop0:	
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Npos0		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos0:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+
+Npos1:
+	mrmovq 16(%rdi), %r10	# read val from src...
+	rmmovq %r10, 16(%rsi)	# ...and store it to dst
+	mrmovq 24(%rdi), %r9	# read val from src...
+	rmmovq %r9, 24(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Npos2		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos2:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos3		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+
+Npos3:
+	mrmovq 32(%rdi), %r10	# read val from src...
+	rmmovq %r10, 32(%rsi)	# ...and store it to dst
+	mrmovq 40(%rdi), %r9	# read val from src...
+	rmmovq %r9, 40(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Npos4		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos4:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos5		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+
+Npos5:
+	mrmovq 48(%rdi), %r10	# read val from src...
+	rmmovq %r10, 48(%rsi)	# ...and store it to dst
+	mrmovq 56(%rdi), %r9	# read val from src...
+	rmmovq %r9, 56(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Npos6		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos6:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos7		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos7:
+	iaddq $64, %rdi		# src++
+	iaddq $64, %rsi		# dst++
+	iaddq $-8, %rdx		# len--
+	jge Loop0			# if so, goto Loop0:
+
+# K = 4
+Loop1header:
+	iaddq $4,%rdx
+	jl Loop2header
+Loop1:
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle N1pos0		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+N1pos0:	
+	andq %r9, %r9		# val <= 0?
+	jle N1pos1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+
+N1pos1:
+	mrmovq 16(%rdi), %r10	# read val from src...
+	rmmovq %r10, 16(%rsi)	# ...and store it to dst
+	mrmovq 24(%rdi), %r9	# read val from src...
+	rmmovq %r9, 24(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle N1pos2		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+N1pos2:	
+	andq %r9, %r9		# val <= 0?
+	jle N1pos3		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+
+N1pos3:
+	iaddq $32, %rdi		# src++
+	iaddq $32, %rsi		# dst++
+	iaddq $-4, %rdx
+
+# K = 2
+Loop2header:
+	iaddq $2,%rdx
+	jl lastLoop
+Loop2:
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle N2pos0		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+N2pos0:	
+	andq %r9, %r9		# val <= 0?
+	jle N2pos1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+N2pos1:
+	iaddq $16, %rdi		# src++
+	iaddq $16, %rsi		# dst++
+	iaddq $-2, %rdx		# len--
+
+# K = 1
+lastLoop:
+	iaddq $1,%rdx
+	jl Done
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Done		# if so, goto Npos:
+	iaddq $1, %rax		# count++
+
+
+
+
+
+
+### maxK = 3
+##################################################################
+# You can modify this portion
+	# Loop header
+	# K = 3
+	iaddq $-3,%rdx		# len >= 3?
+	irmovq $0,%rax		# count = 0;
+	jl Loop2header		# if so, goto Loop1header:
+
+Loop0:	
+
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	mrmovq 16(%rdi), %r8	# read val from src...
+	rmmovq %r8, 16(%rsi)	# ...and store it to dst
+
+	xorq %r9, %r10		# a,b has the same sign?
+	jge ABsameSign		# if so, jmp to ABsameSign
+
+	iaddq $1, %rax		# count++
+	andq %r8, %r8		# val <= 0?
+	jle Npos1		# if so, goto Npos1:
+	iaddq $1, %rax		# count++
+Npos1:
+	jmp NposEnd
+
+ABsameSign:
+	andq %r9, %r9
+	jle Npos2
+	iaddq $2, %rax
+Npos2:
+	andq %r8, %r8
+	jle NposEnd
+	iaddq $1, %rax
+
+NposEnd:
+	iaddq $24, %rdi		# src++
+	iaddq $24, %rsi		# dst++
+	iaddq $-3, %rdx		# len--
+	jge Loop0			# if so, goto Loop0:
+
+
+# K = 2
+Loop2header:
+	iaddq $1,%rdx
+	jl lastLoop
+Loop2:
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	xorq %r9, %r10		# a and b has same sign?
+	jge ABsameSign1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+	jmp Done
+ABsameSign1:
+	andq %r9, %r9
+	jle Done
+	iaddq $2, %rax
+	jmp Done
+
+# K = 1
+lastLoop:
+	iaddq $1,%rdx
+	jl Done
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Done		# if so, goto Npos:
+	iaddq $1, %rax		# count++
+
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+
+
+
+### K = 4
+
+##################################################################
+# You can modify this portion
+	# Loop header
+	# K = 3
+	iaddq $-4,%rdx		# len >= 3?
+	irmovq $0,%rax		# count = 0;
+	jl Loop2header		# if so, goto Loop2header:
+ 
+Loop0:	
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	mrmovq 16(%rdi), %r8	# read val from src...
+	rmmovq %r8, 16(%rsi)	# ...and store it to dst
+	mrmovq 24(%rdi), %r11	# read val from src...
+	rmmovq %r11, 24(%rsi)	# ...and store it to dst
+
+	iaddq $32, %rdi		# src++
+	iaddq $32, %rsi		# dst++
+	
+	xorq %r9, %r10		# a,b has the same sign?
+	jge ABsameSign0		# if so, jmp to ABsameSign
+
+	iaddq $1, %rax		# count++
+	xorq %r8, %r11		# c,d has the same sign?
+	jge CDsameSign0		# if so, goto CDsameSign:
+	iaddq $1, %rax		# count++
+	jmp NposEnd
+
+
+CDsameSign0:
+	andq %r8, %r8
+	jle NposEnd
+	iaddq $2, %rax
+	jmp NposEnd
+
+
+ABsameSign0:
+	xorq %r8, %r11
+	jge CDsameSign1
+	iaddq $1, %rax
+	andq %r9, %r9
+	jle NposEnd
+	iaddq $2, %rax
+	jmp NposEnd
+
+CDsameSign1:
+	xorq %r8,%r9
+	jge ABCDsame
+	iaddq $2, %rax
+	jmp NposEnd
+
+ABCDsame:
+	andq %r8, %r8
+	jle NposEnd
+	iaddq $4, %rax
+
+NposEnd:
+	iaddq $-4, %rdx		# len--
+	jge Loop0			# if so, goto Loop0:
+
+
+# K = 2
+Loop2header:
+	iaddq $2,%rdx
+	jl lastLoop
+Loop2:
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+
+	iaddq $16, %rdi		# src++
+	iaddq $16, %rsi		# dst++
+	iaddq $-2, %rdx		# len--
+
+	xorq %r9, %r10		# a and b has same sign?
+	jge ABsameSign1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+	jmp lastLoop
+
+ABsameSign1:
+	andq %r9, %r9
+	jle lastLoop
+	iaddq $2, %rax
+
+# K = 1
+lastLoop:
+	iaddq $1,%rdx
+	jl Done
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Done		# if so, goto Npos:
+	iaddq $1, %rax		# count++
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
+
+
+
+
+### highest score
+##################################################################
+# You can modify this portion
+	# Loop header
+	# roll K = 4
+	iaddq $-4,%rdx		# len >= 3?
+	irmovq $0,%rax		# count = 0;
+	jl Loop2header		# if so, goto Loop2header:
+ 
+Loop0:	
+	mrmovq (%rdi), %r10	# read val from src...
+	mrmovq 8(%rdi), %r9	# read val from src...
+	mrmovq 16(%rdi), %r8	# read val from src...
+	mrmovq 24(%rdi), %r11	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	xorq %r9, %r10		# a,b has the same sign?
+	rmmovq %r8, 16(%rsi)	# ...and store it to dst
+	rmmovq %r11, 24(%rsi)	# ...and store it to dst
+
+	jge ABsameSign0		# if so, jmp to ABsameSign
+
+	iaddq $1, %rax		# count++
+	xorq %r8, %r11		# c,d has the same sign?
+	jge CDsameSign0		# if so, goto CDsameSign:
+	iaddq $1, %rax		# count++
+	jmp NposEnd
+CDsameSign0:
+	andq %r8, %r8
+	jle NposEnd
+	iaddq $2, %rax
+	jmp NposEnd
+
+ABsameSign0:
+	xorq %r8, %r11
+	jge CDsameSign1
+	iaddq $1, %rax
+	andq %r9, %r9
+	jle NposEnd
+	iaddq $2, %rax
+	jmp NposEnd
+
+CDsameSign1:
+	xorq %r8,%r9
+	jge ABCDsame
+	iaddq $2, %rax
+	jmp NposEnd
+
+ABCDsame:
+	andq %r8, %r8
+	jle NposEnd
+	iaddq $4, %rax
+
+NposEnd:
+	iaddq $32, %rdi		# src++
+	iaddq $32, %rsi		# dst++
+	iaddq $-4, %rdx		# len--
+	jge Loop0			# if so, goto Loop0:
+
+
+# K = 2
+Loop2header:
+	iaddq $2,%rdx
+	jl lastLoop
+Loop2:
+	mrmovq (%rdi), %r10	# read val from src...
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+
+	iaddq $16, %rdi		# src++
+	iaddq $16, %rsi		# dst++
+	iaddq $-2, %rdx		# len--
+
+	xorq %r9, %r10		# a and b has same sign?
+	jge ABsameSign1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+	jmp lastLoop
+ABsameSign1:
+	andq %r9, %r9
+	jle lastLoop
+	iaddq $2, %rax
+	jmp lastLoop
+
+# K = 1
+lastLoop:
+	iaddq $1,%rdx
+	jl Done
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Done		# if so, goto Npos:
+	iaddq $1, %rax		# count++
+##################################################################
+# Do not modify the following section of code
+
+
+
+
+### try with k = 4
+##################################################################
+# You can modify this portion
+	# Loop header
+	# roll K = 4
+	iaddq $-4,%rdx		# len >= 3?
+	irmovq $0,%rax		# count = 0;
+	jl Loop2header		# if so, goto Loop2header:
+ 
+Loop0:	
+	mrmovq (%rdi), %r10		# read val from src...
+	mrmovq 8(%rdi), %r9		# read val from src...
+	mrmovq 16(%rdi), %r8	# read val from src...
+	mrmovq 24(%rdi), %r11	# read val from src...
+	rmmovq %r10, (%rsi)		# ...and store it to dst
+	rmmovq %r9, 8(%rsi)		# ...and store it to dst
+	rmmovq %r8, 16(%rsi)	# ...and store it to dst
+	rmmovq %r11, 24(%rsi)	# ...and store it to dst
+
+	andq %r8, %r8			
+	jle L0xxx		# r8 <= 0		
+	andq %r9, %r9			
+	jle L10xx		# r8 > 0, r9 <= 0
+	andq %r10, %r10			
+	jle L110x		# r8 > 0, r9 > 0, r10 <= 0
+	andq %r11, %r11		
+	jg L1111	
+	iaddq $3, %rax	# r8 > 0, r9 > 0, r10 > 0, r11 <= 0
+	jmp NposEnd
+L1111:
+	iaddq $4, %rax	# r8 > 0, r9 > 0, r10 > 0, r11 > 0
+	jmp NposEnd
+
+L110x:
+	andq %r11, %r11			
+	jg L1101
+	iaddq $2, %rax	# r8 > 0, r9 > 0, r10 <= 0, r11 <= 0
+	jmp NposEnd
+L1101:
+	iaddq $3, %rax	# r8 > 0, r9 > 0, r10 <= 0, r11 > 0
+	jmp NposEnd
+
+L10xx:
+	andq %r10, %r10			
+	jle L100x		# r8 > 0, r9 <= 0, r10 <= 0
+	andq %r11, %r11		
+	jg L1011		
+	iaddq $2, %rax	# r8 > 0, r9 <= 0, r10 > 0, r11 <= 0
+	jmp NposEnd
+L1011:
+	iaddq $3, %rax	# r8 > 0, r9 <= 0, r10 > 0, r11 > 0
+	jmp NposEnd
+
+L100x:
+	andq %r11, %r11		
+	jg L1001		
+	iaddq $1, %rax	# r8 > 0, r9 <= 0, r10 <= 0, r11 <= 0
+	jmp NposEnd
+L1001:
+	iaddq $2, %rax	# r8 > 0, r9 <= 0, r10 <= 0, r11 > 0
+	jmp NposEnd
+
+L0xxx:
+	andq %r9, %r9			
+	jle L00xx		# r8 <= 0, r9 <= 0
+	andq %r10, %r10			
+	jle L010x		# r8 <= 0, r9 > 0, r10 <= 0
+	andq %r11, %r11		
+	jg L0111	
+	iaddq $2, %rax	# r8 <= 0, r9 > 0, r10 > 0, r11 <= 0
+	jmp NposEnd
+L0111:
+	iaddq $3, %rax	# r8 <= 0, r9 > 0, r10 > 0, r11 > 0
+	jmp NposEnd
+
+L010x:
+	andq %r11, %r11			
+	jg L0101
+	iaddq $1, %rax	# r8 <= 0, r9 > 0, r10 <= 0, r11 <= 0
+	jmp NposEnd
+L0101:
+	iaddq $2, %rax	# r8 <= 0, r9 > 0, r10 <= 0, r11 > 0
+	jmp NposEnd
+
+L00xx:
+	andq %r10, %r10			
+	jle L000x		# r8 <= 0, r9 <= 0, r10 <= 0
+	andq %r11, %r11		
+	jg L0011		
+	iaddq $1, %rax	# r8 <= 0, r9 <= 0, r10 > 0, r11 <= 0
+	jmp NposEnd
+L0011:
+	iaddq $2, %rax	# r8 <= 0, r9 <= 0, r10 > 0, r11 > 0
+	jmp NposEnd
+
+L000x:
+	andq %r11, %r11		
+	jg L0001		
+	jmp NposEnd		# r8 <= 0, r9 <= 0, r10 <= 0, r11 <= 0
+L0001:
+	iaddq $1, %rax	# r8 <= 0, r9 <= 0, r10 <= 0, r11 > 0
+
+
+
+
+	
+
+NposEnd:
+	iaddq $32, %rdi		# src++
+	iaddq $32, %rsi		# dst++
+	iaddq $-4, %rdx		# len--
+	jge Loop0			# if so, goto Loop0:
+
+
+# K = 2
+Loop2header:
+	iaddq $2,%rdx
+	jl lastLoop
+Loop2:
+	mrmovq (%rdi), %r10	# read val from src...
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+
+	iaddq $16, %rdi		# src++
+	iaddq $16, %rsi		# dst++
+	iaddq $-2, %rdx		# len--
+
+	xorq %r9, %r10		# a and b has same sign?
+	jge ABsameSign1		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+	jmp lastLoop
+ABsameSign1:
+	andq %r9, %r9
+	jle lastLoop
+	iaddq $2, %rax
+	jmp lastLoop
+
+# K = 1
+lastLoop:
+	iaddq $1,%rdx
+	jl Done
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Done		# if so, goto Npos:
+	iaddq $1, %rax		# count++
+##################################################################
+
+
+
+# You can modify this portion
+
+
+	# K = 8
+	# Loop header
+	iaddq $-8,%rdx		# len < 10?
+	irmovq $0,%rax		# count = 0;
+	jl Loop4_header		# if so, goto Loop4_header:
+
+Loop8:	
+	mrmovq (%rdi), %r8	# read val from src...
+	mrmovq 8(%rdi), %r9	# read val from src...
+	andq %r8, %r8		# val <= 0?
+	rmmovq %r8, (%rsi)	# ...and store it to dst
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	
+	
+	jle Npos12_0		# if so, goto Npos12_0:
+	iaddq $1, %rax		# count++
+Npos12_0:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos12_1		# if so, goto Npos12_1:
+	iaddq $1, %rax		# count++
+Npos12_1:
+	mrmovq 16(%rdi), %r10	# read val from src...
+	mrmovq 24(%rdi), %r11	# read val from src...
+	rmmovq %r10, 16(%rsi)	# ...and store it to dst
+	rmmovq %r11, 24(%rsi)	# ...and store it to dst
+	
+	andq %r10, %r10		# val <= 0?
+	jle Npos12_2		# if so, goto Npos12_2:
+	iaddq $1, %rax		# count++
+Npos12_2:
+	andq %r11, %r11		# val <= 0?
+	jle Npos12_3		# if so, goto Npos12_3:
+	iaddq $1, %rax		# count++
+
+Npos12_3:
+	mrmovq 32(%rdi), %r8	# read val from src...
+	mrmovq 40(%rdi), %r9	# read val from src...
+	mrmovq 48(%rdi), %r10	# read val from src...
+	mrmovq 56(%rdi), %r11	# read val from src...
+	andq %r8, %r8		# val <= 0?
+	rmmovq %r8, 32(%rsi)	# ...and store it to dst
+	rmmovq %r9, 40(%rsi)	# ...and store it to dst
+	rmmovq %r10, 48(%rsi)	# ...and store it to dst
+	rmmovq %r11, 56(%rsi)	# ...and store it to dst
+	
+	jle Npos12_4		# if so, goto Npos12_4:
+	iaddq $1, %rax		# count++
+Npos12_4:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos12_5		# if so, goto Npos12_5:
+	iaddq $1, %rax		# count++
+Npos12_5:
+	andq %r10, %r10		# val <= 0?
+	jle Npos12_6		# if so, goto Npos12_6:
+	iaddq $1, %rax		# count++
+Npos12_6:
+	andq %r11, %r11		# val <= 0?
+	jle Npos12_7		# if so, goto Npos12_7:
+	iaddq $1, %rax		# count++
+
+Npos12_7:
+	iaddq $64, %rdi
+	iaddq $64, %rsi
+	iaddq $-8, %rdx
+	jge Loop8
+
+	# K = 4
+	# Loop header
+Loop4_header:
+	iaddq $4,%rdx	# %rdx + 8 - 4
+	jl Loop2_header
+
+Loop4:
+	mrmovq (%rdi), %r8	# read val from src...
+	mrmovq 8(%rdi), %r9	# read val from src...
+	mrmovq 16(%rdi), %r10	# read val from src...
+	mrmovq 24(%rdi), %r11	# read val from src...	
+	rmmovq %r8, (%rsi)	# ...and store it to dst
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+	rmmovq %r10, 16(%rsi)	# ...and store it to dst
+	rmmovq %r11, 24(%rsi)	# ...and store it to dst
+
+	andq %r10, %r10		# val <= 0?
+	jle Npos4_0		# if so, goto Npos4_0:
+	iaddq $1, %rax		# count++
+Npos4_0:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos4_1		# if so, goto Npos4_1:
+	iaddq $1, %rax		# count++
+Npos4_1:
+	andq %r11, %r11		# val <= 0?
+	jle Npos4_2		# if so, goto Npos4_2:
+	iaddq $1, %rax		# count++
+Npos4_2:	
+	andq %r8, %r8		# val <= 0?
+	jle Npos4_3		# if so, goto Npos4_3:
+	iaddq $1, %rax		# count++
+Npos4_3:
+	iaddq $32, %rdi		# src++
+	iaddq $32, %rsi		# dst++
+	iaddq $-4, %rdx
+	
+
+	# K = 2
+	# Loop header
+Loop2_header:
+	iaddq $2,%rdx	# %rdx + 4 - 2
+	jl Loop1_header
+Loop2:
+	mrmovq (%rdi), %r10	# read val from src...
+	mrmovq 8(%rdi), %r9	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	rmmovq %r9, 8(%rsi)	# ...and store it to dst
+
+	andq %r10, %r10		# val <= 0?
+	jle Npos2_0		# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos2_0:	
+	andq %r9, %r9		# val <= 0?
+	jle Npos2_1			# if so, goto Npos0:
+	iaddq $1, %rax		# count++
+Npos2_1:
+	iaddq $16, %rdi		# src++
+	iaddq $16, %rsi		# dst++
+	iaddq $-2, %rdx		# len--
+	jge Loop2
+
+# K = 1
+Loop1_header:
+	iaddq $1,%rdx
+	jl Done
+	mrmovq (%rdi), %r10	# read val from src...
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Done		# if so, goto Npos:
+	iaddq $1, %rax		# count++

@@ -1,0 +1,6 @@
+# test mrmovq
+	mrmovq -2(%rsp), %rax
+	mrmovq 10(%rbx), %rsi 
+	mrmovq 8(%rbp), %rcx
+	halt
+# end

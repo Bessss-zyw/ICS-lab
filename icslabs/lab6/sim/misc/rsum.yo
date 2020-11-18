@@ -1,0 +1,51 @@
+                            | # Yiwen Zhang 518021911211
+                            | 
+0x000:                      |         .pos 0
+0x000: 30f40003000000000000 |         irmovq  stack, %rsp     #set up stack pointer
+0x00a: 30f72000000000000000 |         irmovq  ele1, %rdi
+0x014: 805000000000000000   |         call    rsum_list        #execute function
+0x01d: 00                   |         halt                    #terminate
+                            | 
+                            | # Sample linked list
+0x020:                      |         .align 8
+0x020:                      | ele1:
+0x020: 0a00000000000000     |         .quad 0x00a
+0x028: 3000000000000000     |         .quad ele2
+0x030:                      | ele2:
+0x030: b000000000000000     |         .quad 0x0b0
+0x038: 4000000000000000     |         .quad ele3
+0x040:                      | ele3:
+0x040: 000c000000000000     |         .quad 0xc00
+0x048: 0000000000000000     |         .quad 0
+                            | 
+0x050:                      | rsum_list:
+0x050: a05f                 |     pushq       %rbp
+0x052: 2045                 |     rrmovq      %rsp, %rbp
+0x054: 30f10800000000000000 |     irmovq      $8, %rcx
+0x05e: 6114                 |     subq        %rcx, %rsp
+0x060: 4075f8ffffffffffffff |     rmmovq      %rdi, -8(%rbp)  #ls
+0x06a:                      | L1:
+0x06a: 30f10000000000000000 |     irmovq      $0, %rcx
+0x074: 6117                 |     subq        %rcx, %rdi
+0x076: 73af00000000000000   |     je          L3      # if ls = null
+0x07f:                      | L2:
+0x07f: 50170000000000000000 |     mrmovq      (%rdi), %rcx
+0x089: 50770800000000000000 |     mrmovq      8(%rdi), %rdi
+0x093: a01f                 |     pushq       %rcx
+0x095: a07f                 |     pushq       %rdi
+0x097: 805000000000000000   |     call        rsum_list
+0x0a0: b07f                 |     popq        %rdi
+0x0a2: b01f                 |     popq        %rcx
+0x0a4: 6010                 |     addq        %rcx, %rax
+0x0a6: 70b900000000000000   |     jmp         L4
+0x0af:                      | L3:
+0x0af: 30f00000000000000000 |     irmovq      $0, %rax
+0x0b9:                      | L4:
+0x0b9: 30f10800000000000000 |     irmovq      $8, %rcx
+0x0c3: 6014                 |     addq        %rcx, %rsp
+0x0c5: b05f                 |     popq        %rbp
+0x0c7: 90                   |     ret
+                            | 
+                            | # stack starts here and grows to lower addresses
+0x300:                      |         .pos 0x300
+0x300:                      | stack:
